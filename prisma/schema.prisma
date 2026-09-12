@@ -1,0 +1,79 @@
+// Prisma schema for the Livestock Farm Management System.
+// See /docs/DATABASE.md for the design rationale behind these models.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AnimalCategory {
+  BUFFALO
+  COW
+  GOAT
+}
+
+enum AnimalStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model Animal {
+  id        String         @id
+  name      String?
+  category  AnimalCategory
+  status    AnimalStatus   @default(ACTIVE)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  foodRecords     FoodRecord[]
+  milkRecords     MilkRecord[]
+  medicineRecords MedicineRecord[]
+
+  @@index([category])
+  @@index([status])
+}
+
+model FoodRecord {
+  id        String   @id @default(cuid())
+  animalId  String
+  animal    Animal   @relation(fields: [animalId], references: [id])
+  date      DateTime
+  foodName  String?
+  quantity  Decimal  @db.Decimal(8, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([animalId])
+  @@index([date])
+}
+
+model MilkRecord {
+  id          String   @id @default(cuid())
+  animalId    String
+  animal      Animal   @relation(fields: [animalId], references: [id])
+  date        DateTime
+  morningMilk Decimal  @db.Decimal(6, 2)
+  eveningMilk Decimal  @db.Decimal(6, 2)
+  totalMilk   Decimal  @db.Decimal(6, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([animalId])
+  @@index([date])
+}
+
+model MedicineRecord {
+  id           String   @id @default(cuid())
+  animalId     String
+  animal       Animal   @relation(fields: [animalId], references: [id])
+  date         DateTime
+  medicineName String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([animalId])
+  @@index([date])
+}
