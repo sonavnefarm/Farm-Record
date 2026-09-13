@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { NAV_ITEMS } from "@/lib/nav-items";
 import { cn } from "@/lib/utils/cn";
+import { logoutAction } from "@/lib/actions/auth";
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -70,9 +71,37 @@ function NavLinks({
   );
 }
 
+function LogoutButton({ className }: { className?: string }) {
+  return (
+    <form action={logoutAction}>
+      <button
+        type="submit"
+        className={cn(
+          "flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-text)]",
+          className,
+        )}
+      >
+        <LogOut size={18} strokeWidth={1.75} aria-hidden="true" />
+        Log out
+      </button>
+    </form>
+  );
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // The login page has no nav shell — it's the one page a signed-out
+  // visitor can reach (see src/middleware.ts), so there's nothing to
+  // navigate to yet.
+  if (pathname === "/login") {
+    return (
+      <main id="main-content" className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] px-4">
+        {children}
+      </main>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
@@ -90,6 +119,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </span>
         </div>
         <NavLinks pathname={pathname} />
+        <div className="border-t border-[var(--color-border)] px-3 py-3">
+          <LogoutButton />
+        </div>
         <div className="px-5 py-4 text-xs text-[var(--color-text-faint)]">
           Livestock Management
         </div>
@@ -114,6 +146,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {mobileOpen && (
         <div className="border-b border-[var(--color-border)] bg-[var(--color-bg)] pb-3 lg:hidden">
           <NavLinks pathname={pathname} onNavigate={() => setMobileOpen(false)} />
+          <div className="mt-1 border-t border-[var(--color-border)] px-3 pt-3">
+            <LogoutButton />
+          </div>
         </div>
       )}
 
