@@ -8,6 +8,8 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { ANIMAL_CATEGORY_LABELS } from "@/types/animal";
 import { getAnimal } from "@/lib/services/animals";
 import { getAnimalFoodHistory } from "@/lib/services/food";
+import { getAnimalMilkHistory } from "@/lib/services/milk";
+import { getAnimalMedicineHistory } from "@/lib/services/medicine";
 import { deactivateAnimalAction, reactivateAnimalAction } from "@/lib/actions/animals";
 import { NotFoundError } from "@/lib/errors";
 import { formatDate } from "@/lib/utils/date";
@@ -36,6 +38,8 @@ export default async function AnimalProfilePage({
       : reactivateAnimalAction.bind(null, animal.id);
 
   const foodHistory = await getAnimalFoodHistory(animal.id);
+  const milkHistory = await getAnimalMilkHistory(animal.id);
+  const medicineHistory = await getAnimalMedicineHistory(animal.id);
 
   return (
     <>
@@ -93,8 +97,8 @@ export default async function AnimalProfilePage({
               description="Log this animal's first food record from the Food Records page."
             />
           ) : (
-            <div className="overflow-hidden rounded-md border border-[var(--color-border)]">
-              <table className="w-full text-left text-sm">
+            <div className="overflow-x-auto rounded-md border border-[var(--color-border)]">
+              <table className="w-full text-left text-sm" aria-label="Food history">
                 <thead>
                   <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface)] text-xs font-medium text-[var(--color-text-muted)]">
                     <th className="px-4 py-2.5 font-medium">Date</th>
@@ -129,20 +133,84 @@ export default async function AnimalProfilePage({
 
         <section>
           <h2 className="mb-3 text-sm font-semibold text-[var(--color-text)]">Milk History</h2>
-          <EmptyState
-            icon={Milk}
-            title="Milk history is not built yet"
-            description="Milk records arrive in Phase 4."
-          />
+          {milkHistory.length === 0 ? (
+            <EmptyState
+              icon={Milk}
+              title="No milk records yet"
+              description="Log this animal's first milk record from the Milk Records page."
+            />
+          ) : (
+            <div className="overflow-x-auto rounded-md border border-[var(--color-border)]">
+              <table className="w-full text-left text-sm" aria-label="Milk history">
+                <thead>
+                  <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface)] text-xs font-medium text-[var(--color-text-muted)]">
+                    <th className="px-4 py-2.5 font-medium">Date</th>
+                    <th className="px-4 py-2.5 font-medium">Morning (L)</th>
+                    <th className="px-4 py-2.5 font-medium">Evening (L)</th>
+                    <th className="px-4 py-2.5 font-medium">Total (L)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {milkHistory.map((record) => (
+                    <tr
+                      key={record.id}
+                      className="border-b border-[var(--color-border)] bg-[var(--color-surface)] last:border-b-0"
+                    >
+                      <td className="px-4 py-2.5 text-[var(--color-text)]">
+                        {formatDate(record.date)}
+                      </td>
+                      <td className="px-4 py-2.5 font-mono text-[13px] text-[var(--color-text)]">
+                        {record.morningMilk.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-2.5 font-mono text-[13px] text-[var(--color-text)]">
+                        {record.eveningMilk.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-2.5 font-mono text-[13px] font-medium text-[var(--color-text)]">
+                        {record.totalMilk.toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
 
         <section>
           <h2 className="mb-3 text-sm font-semibold text-[var(--color-text)]">Medicine History</h2>
-          <EmptyState
-            icon={Syringe}
-            title="Medicine history is not built yet"
-            description="Medicine records arrive in Phase 5."
-          />
+          {medicineHistory.length === 0 ? (
+            <EmptyState
+              icon={Syringe}
+              title="No medicine records yet"
+              description="Log this animal's first medicine record from the Medicine Records page."
+            />
+          ) : (
+            <div className="overflow-x-auto rounded-md border border-[var(--color-border)]">
+              <table className="w-full text-left text-sm" aria-label="Medicine history">
+                <thead>
+                  <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface)] text-xs font-medium text-[var(--color-text-muted)]">
+                    <th className="px-4 py-2.5 font-medium">Date</th>
+                    <th className="px-4 py-2.5 font-medium">Medicine</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {medicineHistory.map((record) => (
+                    <tr
+                      key={record.id}
+                      className="border-b border-[var(--color-border)] bg-[var(--color-surface)] last:border-b-0"
+                    >
+                      <td className="px-4 py-2.5 text-[var(--color-text)]">
+                        {formatDate(record.date)}
+                      </td>
+                      <td className="px-4 py-2.5 text-[var(--color-text)]">
+                        {record.medicineName}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       </div>
     </>

@@ -65,6 +65,12 @@ export function RecordFilters({
           placeholder="Food name"
           defaultValue={searchParams.get("foodName") ?? ""}
           onBlur={(e) => updateParam("foodName", e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              updateParam("foodName", e.currentTarget.value);
+            }
+          }}
         />
       )}
 
