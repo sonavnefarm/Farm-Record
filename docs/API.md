@@ -9,9 +9,10 @@ per-endpoint will be recorded in `DECISIONS.md` as it's made in Phase 1/2.
 
 ## Conventions
 
-**Status: Animal and Food endpoints below are implemented**
-(`src/app/api/animals/**`, `src/app/api/food/**`). Milk/Medicine/Analytics
-endpoints are still planned (Phases 4, 5, 7).
+**Status: Animal, Food, Milk, and Medicine endpoints below are implemented**
+(`src/app/api/animals/**`, `src/app/api/food/**`, `src/app/api/milk/**`,
+`src/app/api/medicine/**`). Only Analytics endpoints remain planned
+(Phase 7).
 
 - All endpoints validate input with Zod before touching the database.
 - All responses use a consistent envelope:
@@ -57,13 +58,22 @@ endpoints are still planned (Phases 4, 5, 7).
 
 ## Analytics
 
-| Action                     | Method & Path                                |
-|------------------------------|--------------------------------------------|
-| Get Dashboard Statistics    | `GET /api/analytics/dashboard`               |
-| Get Milk Analytics          | `GET /api/analytics/milk?range=7d\|30d\|today\|custom` |
-| Get Food Analytics          | `GET /api/analytics/food?range=...`          |
-| Get Animal Analytics        | `GET /api/analytics/animals`                 |
-| Get Medicine Analytics      | `GET /api/analytics/medicine?range=...`      |
+**Status: not implemented as REST routes.** Like the Dashboard (Phase 6),
+the Analytics page (Phase 7) reads directly from its service layer
+(`src/lib/services/analytics.ts`, `src/lib/services/dashboard.ts`) via
+Server Components, since nothing outside this app currently needs this
+data over HTTP. The table below remains the plan for if/when an external
+consumer (e.g. a future mobile client) needs it — implementing these would
+be straightforward thin wrappers over the existing service functions,
+following the same pattern already used for Animals/Food/Milk/Medicine.
+
+| Action                     | Method & Path                                | Backing service function |
+|------------------------------|--------------------------------------------|---------------------------|
+| Get Dashboard Statistics    | `GET /api/analytics/dashboard`               | `getAnimalSummary`, `getTodayStats`, `getMilkTrend`, `getRecentActivity` (`services/dashboard.ts`) |
+| Get Milk Analytics          | `GET /api/analytics/milk?range=7d\|30d\|today\|custom` | `getMilkAnalytics` (`services/analytics.ts`) |
+| Get Food Analytics          | `GET /api/analytics/food?range=...`          | `getFoodAnalytics` |
+| Get Animal Analytics        | `GET /api/analytics/animals`                 | `getAnimalAnalytics` |
+| Get Medicine Analytics      | `GET /api/analytics/medicine?range=...`      | `getMedicineAnalytics` |
 
 ## Error Handling Contract
 

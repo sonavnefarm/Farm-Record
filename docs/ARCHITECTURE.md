@@ -99,11 +99,14 @@ livestock-farm-app/
   tailwind.config.ts
 ```
 
-This structure is the target for the fully-built app. As of Phase 3, the
-Animal and Food modules are fully implemented end-to-end (types,
-validation, service, Server Actions, API routes, UI). Milk/Medicine and
-their `api/` routes do not exist yet — they arrive in Phases 4–5. See
-`PROJECT_STATUS.md` for the exact current file list.
+This structure is the target for the fully-built app. As of Phase 7, all
+core data modules (Animal, Food, Milk, Medicine) plus Dashboard and
+Analytics are fully implemented. The MVP's functional scope from
+`FEATURES.md` is now complete; remaining phases (8–10) are refinement,
+hardening, and deployment rather than new features. A `vitest.config.mts`
+and co-located `*.test.ts` files were added starting in Phase 4 for
+pure-logic unit tests (see `DECISIONS.md`). See `PROJECT_STATUS.md` for the
+exact current file list.
 
 ## 5. Layering Principles
 

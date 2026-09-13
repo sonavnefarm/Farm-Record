@@ -5,8 +5,8 @@ import type { Animal } from "@/types/animal";
 
 export function AnimalsTable({ animals }: { animals: Animal[] }) {
   return (
-    <div className="overflow-hidden rounded-md border border-[var(--color-border)]">
-      <table className="w-full text-left text-sm">
+    <div className="overflow-x-auto rounded-md border border-[var(--color-border)]">
+      <table className="w-full text-left text-sm" aria-label="Animals">
         <thead>
           <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface)] text-xs font-medium text-[var(--color-text-muted)]">
             <th className="px-4 py-2.5 font-medium">Animal ID</th>

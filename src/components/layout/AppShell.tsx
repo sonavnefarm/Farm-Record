@@ -20,7 +20,7 @@ function NavLinks({
   onNavigate?: () => void;
 }) {
   return (
-    <nav className="flex flex-1 flex-col gap-1 px-3">
+    <nav className="flex flex-1 flex-col gap-1 px-3" aria-label="Main navigation">
       {NAV_ITEMS.map((item) => {
         const active = isActive(pathname, item.href);
         const Icon = item.icon;
@@ -29,6 +29,7 @@ function NavLinks({
             <Link
               href={item.href}
               onClick={onNavigate}
+              aria-current={active ? "page" : undefined}
               className={cn(
                 "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 active
@@ -36,7 +37,7 @@ function NavLinks({
                   : "text-[var(--color-text-muted)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text)]",
               )}
             >
-              <Icon size={18} strokeWidth={1.75} />
+              <Icon size={18} strokeWidth={1.75} aria-hidden="true" />
               {item.label}
             </Link>
             {item.children && active && (
@@ -48,6 +49,7 @@ function NavLinks({
                       key={child.href}
                       href={child.href}
                       onClick={onNavigate}
+                      aria-current={childActive ? "page" : undefined}
                       className={cn(
                         "rounded-md px-2 py-1.5 text-sm transition-colors",
                         childActive
@@ -74,6 +76,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-[var(--color-accent)] focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+      >
+        Skip to content
+      </a>
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-bg)] lg:flex lg:flex-col">
         <div className="flex h-16 items-center gap-2 px-5">
@@ -110,7 +118,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Main content */}
-      <main className="flex-1 bg-[var(--color-bg)]">
+      <main id="main-content" className="flex-1 bg-[var(--color-bg)]">
         <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
           {children}
         </div>

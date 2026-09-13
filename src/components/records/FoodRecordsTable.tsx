@@ -7,7 +7,7 @@ import type { FoodRecordWithAnimal } from "@/types/food";
 export function FoodRecordsTable({ records }: { records: FoodRecordWithAnimal[] }) {
   return (
     <div className="overflow-x-auto rounded-md border border-[var(--color-border)]">
-      <table className="w-full text-left text-sm">
+      <table className="w-full text-left text-sm" aria-label="Food records">
         <thead>
           <tr className="border-b border-[var(--color-border)] bg-[var(--color-surface)] text-xs font-medium text-[var(--color-text-muted)]">
             <th className="px-4 py-2.5 font-medium">Date</th>
@@ -52,7 +52,7 @@ export function FoodRecordsTable({ records }: { records: FoodRecordWithAnimal[] 
                   <Link
                     href={`/records/food/${record.id}/edit`}
                     aria-label="Edit record"
-                    className="rounded-md p-1.5 text-[var(--color-text-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-text)]"
+                    className="rounded-md p-2 text-[var(--color-text-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-text)]"
                   >
                     <Pencil size={15} />
                   </Link>
@@ -60,7 +60,7 @@ export function FoodRecordsTable({ records }: { records: FoodRecordWithAnimal[] 
                     <button
                       type="submit"
                       aria-label="Delete record"
-                      className="rounded-md p-1.5 text-[var(--color-text-muted)] hover:bg-[var(--color-danger-soft)] hover:text-[var(--color-danger)]"
+                      className="rounded-md p-2 text-[var(--color-text-muted)] hover:bg-[var(--color-danger-soft)] hover:text-[var(--color-danger)]"
                     >
                       <Trash2 size={15} />
                     </button>
